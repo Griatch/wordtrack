@@ -78,7 +78,7 @@ To start updating your word count, check your text editor for your
 current word count and give it as a number:
 
 ```
-    wordtrack.py <wordcount>
+    python wordtrack.py <wordcount>
 ```
 
 This registers your current word count and displays the current
@@ -86,4 +86,4 @@ statistics. You can update as many times as you want in a day, only
 the latest will be stored.
 
 You can view the statistics for the current period by calling
-wordtrack without arguments.
+Wordtrack without arguments.
