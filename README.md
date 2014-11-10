@@ -34,14 +34,11 @@ other times of the year too:
 
 You need git and Python 2.7.
 
-Just `cd` to place you want the program folder to end up and do
+Just `cd` to the place you want the program folder to end up and do
 
 ```
 git clone https://github.com/Griatch/wordtrack.git
 ```
-
-The program is run from the install folder.
-
 
 ## Usage
 
@@ -60,11 +57,12 @@ Start a tracking like this:
     python wordtrack.py start
 ```
 
-This will create a new file wordtrack.txt in the same directory. This
-is the data file storing the wordcounts (it's easily human-readable). This
-defaults to tracking a period of 30 days and a word-count goal of
-50000 words (NaNoWriMo's default). The period always starts from the
-current day.
+A new file `wordtrack.txt` will appear in the same directory.  This is
+the ascii data file storing the word counts. It's easily
+human-readable and you can also edit past word-counts by editing this
+file if you should want to. Wordtrack defaults to a time period of 30
+days and a word-count goal of 50000 words (NaNoWriMo's default). The
+period always starts from the current day.
 
 You can specify other periods and word-goals. To set a period of 20
 days and a word-goal of 30 000 words, do:
@@ -73,9 +71,8 @@ days and a word-goal of 30 000 words, do:
     python wordtrack.py start 20 30000
 ```
 
-you can only have one
-period running at a time (if you run `start` again, you will start
-over).
+You can only have one period running at a time (if you run `start`
+again, you will start over).
 
 To start updating your word count, check your text editor for your
 current word count and give it as a number:
