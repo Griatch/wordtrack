@@ -9,7 +9,25 @@ novel of 50 000 words during the month of November.
 No code of theirs were used and this little program is not in any way
 related or endorsed by the NaNoWriMo organization. I just thought
 their display was nice and encouraging and would like to have it for
-other times of the year too.
+other times of the year too:
+
+```
+    Period: 2014-11-01 - 2014-11-30
+
+    Your average per day:  2203
+    Words written today:   1800
+    Target word count:     50000
+    Target average word
+           count per day:  1667
+    Total words written:   22037
+    Words remaining:       27963
+    Current day:           10
+    Days remaining:        21
+    At this rate you
+          will finish on:  2014-11-23
+    Words per day to
+          finish on time:  1332
+```
 
 
 ## Install
