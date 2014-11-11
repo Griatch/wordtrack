@@ -207,7 +207,7 @@ def _stats(tracking_data):
             "words_remaining": words_remaining,
             "current_day": current_day,
             "days_remaining": days_remaining,
-            "finish_day": current_goal_day + 1, # needed for correct plot
+            "finish_day": current_goal_day,  # needed for correct plot
             "finish_date": finish_date,
             "needed_word_count": int(math.ceil(needed_word_count))}
 
@@ -222,11 +222,11 @@ def _plot(tracking_data):
         return "Plotting requires matplotlib, please install matplotlib and try again."
     wordcount_list = tracking_data[3:]
     stats = _stats(tracking_data)
-    counts = wordcount_list + [0 for i in range(stats["days_remaining"] + 1)]
+    counts = wordcount_list + [0 for i in range(stats["days_remaining"])]
     Ncount = len(counts)
     days = [1 + i for i in range(Ncount)]
     target_average = [i * stats["target_average_word_count"] for i in range(Ncount)]
-    current_average = [i * stats["average_words_per_day"] for i in range(Ncount)]
+    current_average = [i * stats["average_words_per_day"] for i in range(1, Ncount + 1)]
     x1, x2, y1, y2 = stats["finish_day"], Ncount, 0, stats["target_word_count"]
     gshade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
     goal_line = ((x1,x1), (y1,y2))
@@ -237,22 +237,22 @@ def _plot(tracking_data):
     # creating the plots
     print "plotting ..."
     pyplot.close("all")
-    fig, ax1 = pyplot.subplots()
 
-    ax1.set_xlim(0, Ncount + 2)
-    ax1.set_ylim(0, stats["target_word_count"] + 1)
-    ax1.set_title("Wordtrack %s - %s" % (stats["starting_date"], stats["ending_date"]))
-    ax1.set_xlabel("Day number")
-    ax1.set_ylabel("Words written")
-    ax1.plot(days, target_average, '--', c="r", linewidth=4, label="target average")
-    ax1.plot(days, current_average, '*', c="b", linewidth=4, label="current average")
-    ax1.fill(*gshade, alpha=0.2, color="g")
-    ax1.plot(*goal_line, c="g")
-    ax1.fill(*rshade, alpha=0.2, color="r")
-    ax1.plot(*deadline, c="r")
-    ax1.bar(days, counts, color="black")
-    # ax1.legend(loc=2)
-    ax1.text(0.03, 0.97, _display(stats), transform=ax1.transAxes, fontsize=10,
+    fig, ax = pyplot.subplots()
+    ax.set_xlim(0.5, Ncount + 2)
+    ax.set_ylim(0, stats["target_word_count"] + 1)
+    ax.set_title("Wordtrack %s - %s" % (stats["starting_date"], stats["ending_date"]))
+    ax.set_xlabel("Day number")
+    ax.set_ylabel("Words written")
+
+    ax.plot(days, target_average, '--', c="r", linewidth=4, label="target average")
+    ax.plot(days, current_average, '.', c="b", linewidth=4, label="current average")
+    ax.fill(*gshade, alpha=0.2, color="g")
+    ax.plot(*goal_line, c="g")
+    ax.fill(*rshade, alpha=0.2, color="r")
+    ax.plot(*deadline, c="r")
+    ax.bar(days, counts, color="black", align="center")
+    ax.text(0.03, 0.97, _display(stats), transform=ax.transAxes, fontsize=10,
             horizontalalignment='left', verticalalignment='top',
             bbox={"boxstyle":"round", "alpha":0.2, "facecolor":"white"})
     pyplot.tight_layout()
