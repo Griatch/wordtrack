@@ -12,7 +12,6 @@ their display was nice and encouraging and would like to have it for
 other times of the year too:
 
 ![plot](plot_example.png)
-
 ```
     Period: 2014-11-01 - 2014-11-30
 
