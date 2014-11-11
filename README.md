@@ -45,7 +45,16 @@ git clone https://github.com/Griatch/wordtrack.git
 Wordtrack is run from the installation folder, in a terminal.
 
 ```
-    python wordtrack [start [days [wordgoal]] | <wordcount>]
+    python wordtrack [start [days [wordgoal]] | plot | <wordcount>]
+
+       arguments:
+         start  - start a new period, starting from today
+            days - number of days in period (default 30)
+            wordgoal - target # of words (default 50 000)
+         plot - plot your progress (requires matplotlib)
+         <wordcount> - store a new wordcount
+
+      Use without arguments to show current statistics.
 ```
 
 

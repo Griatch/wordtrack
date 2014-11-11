@@ -40,6 +40,19 @@ You can view the statistics for the current period by calling
 wordtrack without arguments.
 """
 
+USAGE = """
+ Usage:
+   python wordtrack [start [days [wordgoal]] | plot | <wordcount>]
+
+    arguments:
+      (no args) - show current statistics
+      start  - start a new period, starting from today
+         days - number of days in period (default 30)
+         wordgoal - target # of words (default 50 000)
+      plot - plot your progress (requires matplotlib)
+      <wordcount> - store a new wordcount
+"""
+
 import sys
 import math
 import datetime
@@ -338,7 +351,7 @@ if __name__ == "__main__":
     nlen = len(argv)
     if nlen < 2:
         out = wordtrack_display(filename)
-        print out if out else __doc__
+        print out if out else USAGE
     else:
         if argv[1].lower() in ("start", "s"):
             # start a new period
@@ -353,11 +366,11 @@ if __name__ == "__main__":
         elif argv[1].lower() in ("plot", "p"):
             print wordtrack_plot(filename=filename)
         elif argv[1] in ("help", "h", "--help"):
-            print __doc__
+            print USAGE
         elif argv[1].isdigit():
             # register a new word count
             wordtrack_update(filename, int(argv[1]))
             out = wordtrack_display(filename)
-            print out if out else __doc__
+            print out if out else USAGE
         else:
             print "Malformed input. Use --help."
