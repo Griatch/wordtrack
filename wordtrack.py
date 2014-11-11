@@ -222,29 +222,40 @@ def _plot(tracking_data):
         return "Plotting requires matplotlib, please install matplotlib and try again."
     wordcount_list = tracking_data[3:]
     stats = _stats(tracking_data)
-    counts = wordcount_list + [0 for i in range(stats["days_remaining"])]
+    counts = wordcount_list + [0 for i in range(stats["days_remaining"] + 1)]
     Ncount = len(counts)
     days = [1 + i for i in range(Ncount)]
     target_average = [i * stats["target_average_word_count"] for i in range(Ncount)]
     current_average = [i * stats["average_words_per_day"] for i in range(Ncount)]
     x1, x2, y1, y2 = stats["finish_day"], Ncount, 0, stats["target_word_count"]
-    shade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
+    gshade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
     goal_line = ((x1,x1), (y1,y2))
-    print "shade, goal:", shade, goal_line
+    x1, x2, y1, y2 = Ncount, Ncount +2, 0, stats["target_word_count"]
+    rshade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
+    deadline = ((x1,x1), (y1,y2))
 
     # creating the plots
     print "plotting ..."
-    pyplot.xlim(0, Ncount)
-    pyplot.ylim(0, stats["target_word_count"] + 1)
-    pyplot.title("Wordtrack %s - %s" % (stats["starting_date"], stats["ending_date"]))
-    pyplot.xlabel("Day number")
-    pyplot.ylabel("Words written")
-    pyplot.plot(days, target_average, '--', c="r", linewidth=4, label="target average")
-    pyplot.plot(days, current_average, '*', c="b", linewidth=4, label="current average")
-    pyplot.fill(*shade, alpha=0.2, color="g")
-    pyplot.plot(*goal_line, c="g")
-    pyplot.bar(days, counts, color="black")
-    pyplot.legend(loc=2)
+    pyplot.close("all")
+    fig, ax1 = pyplot.subplots()
+
+    ax1.set_xlim(0, Ncount + 2)
+    ax1.set_ylim(0, stats["target_word_count"] + 1)
+    ax1.set_title("Wordtrack %s - %s" % (stats["starting_date"], stats["ending_date"]))
+    ax1.set_xlabel("Day number")
+    ax1.set_ylabel("Words written")
+    ax1.plot(days, target_average, '--', c="r", linewidth=4, label="target average")
+    ax1.plot(days, current_average, '*', c="b", linewidth=4, label="current average")
+    ax1.fill(*gshade, alpha=0.2, color="g")
+    ax1.plot(*goal_line, c="g")
+    ax1.fill(*rshade, alpha=0.2, color="r")
+    ax1.plot(*deadline, c="r")
+    ax1.bar(days, counts, color="black")
+    # ax1.legend(loc=2)
+    ax1.text(0.03, 0.97, _display(stats), transform=ax1.transAxes, fontsize=10,
+            horizontalalignment='left', verticalalignment='top',
+            bbox={"boxstyle":"round", "alpha":0.2, "facecolor":"white"})
+    pyplot.tight_layout()
     pyplot.show()
 
 
@@ -364,7 +375,9 @@ if __name__ == "__main__":
             wordtrack_start(filename=filename, days=days, wordgoal=wordgoal)
             print "Started new wordtrack period (%s days including today) with the goal of writing %s words. Good luck!" % (days, wordgoal)
         elif argv[1].lower() in ("plot", "p"):
-            print wordtrack_plot(filename=filename)
+            err = wordtrack_plot(filename=filename)
+            if err:
+                print err
         elif argv[1] in ("help", "h", "--help"):
             print USAGE
         elif argv[1].isdigit():
