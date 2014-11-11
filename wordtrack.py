@@ -3,7 +3,7 @@
 Wordtrack (Griatch 2014)
 
 Usage:
-    wordtrack.py start [days [wordgoal]] | <wordcount>
+    wordtrack.py start [days [wordgoal]] | plot | <wordcount>
 
 A wordcount tracker that mimics the word-counting mechanism of
 NaNoWriMo (www.nanowrimo.org). No code of theirs were used and this is
@@ -30,6 +30,11 @@ To update your word count, do:
 This registers your current word count and displays the current
 statistics. You can update as many times as you want in a day, only
 the latest will be stored.
+
+You can make a plot of your current progress. For this you need
+the matplotlib library:
+
+    wordtrack.py plot
 
 You can view the statistics for the current period by calling
 wordtrack without arguments.

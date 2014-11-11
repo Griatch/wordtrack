@@ -11,6 +11,8 @@ related or endorsed by the NaNoWriMo organization. I just thought
 their display was nice and encouraging and would like to have it for
 other times of the year too:
 
+![plot](plot_example.png)
+
 ```
     Period: 2014-11-01 - 2014-11-30
 
@@ -29,10 +31,9 @@ other times of the year too:
           finish on time:  1332
 ```
 
-
 ## Install
 
-You need git and Python 2.7.
+You need git and Python 2.7. For plotting you also need matplotlib.
 
 Just `cd` to the place you want the program folder to end up and do
 
@@ -84,6 +85,12 @@ current word count and give it as a number:
 This registers your current word count and displays the current
 statistics. You can update as many times as you want in a day, only
 the latest will be stored.
+
+To plot (requires matplotlib), use
+
+```
+    python wordtrac.py plot
+```
 
 You can view the statistics for the current period by calling
 Wordtrack without arguments.
