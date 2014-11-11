@@ -133,6 +133,7 @@ wordgoal: %s
             daystring = "\n".join("day %i: %i" % (i+1, val) for i, val in enumerate(track[3:]))
             f.write(daystring)
 
+
 def _stats(tracking_data):
     """
     Get statistics on the word count over time, as per nanowrimo.
@@ -149,7 +150,7 @@ def _stats(tracking_data):
     wordgoal = tracking_data[2]
     wordcount_list = tracking_data[3:]
 
-    target_time_period = (ending_date - starting_date).days
+    target_time_period = (ending_date - starting_date).days + 1
     current_day = (datetime.date.today() - starting_date).days + 1
     #current_day = (datetime.date(2014, 11, 25) - starting_date).days + 1
 
@@ -188,8 +189,45 @@ def _stats(tracking_data):
             "words_remaining": words_remaining,
             "current_day": current_day,
             "days_remaining": days_remaining,
+            "finish_day": current_goal_day + 1, # needed for correct plot
             "finish_date": finish_date,
             "needed_word_count": int(math.ceil(needed_word_count))}
+
+
+def _plot(tracking_data):
+    """
+    Use matplotlib to plot histogram and curve
+    """
+    try:
+        from matplotlib import pyplot
+    except ImportError:
+        return "Plotting requires matplotlib, please install matplotlib and try again."
+    wordcount_list = tracking_data[3:]
+    stats = _stats(tracking_data)
+    counts = wordcount_list + [0 for i in range(stats["days_remaining"])]
+    Ncount = len(counts)
+    days = [1 + i for i in range(Ncount)]
+    target_average = [i * stats["target_average_word_count"] for i in range(Ncount)]
+    current_average = [i * stats["average_words_per_day"] for i in range(Ncount)]
+    x1, x2, y1, y2 = stats["finish_day"], Ncount, 0, stats["target_word_count"]
+    shade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
+    goal_line = ((x1,x1), (y1,y2))
+    print "shade, goal:", shade, goal_line
+
+    # creating the plots
+    print "plotting ..."
+    pyplot.xlim(0, Ncount)
+    pyplot.ylim(0, stats["target_word_count"] + 1)
+    pyplot.title("Wordtrack %s - %s" % (stats["starting_date"], stats["ending_date"]))
+    pyplot.xlabel("Day number")
+    pyplot.ylabel("Words written")
+    pyplot.plot(days, target_average, '--', c="r", linewidth=4, label="target average")
+    pyplot.plot(days, current_average, '*', c="b", linewidth=4, label="current average")
+    pyplot.fill(*shade, alpha=0.2, color="g")
+    pyplot.plot(*goal_line, c="g")
+    pyplot.bar(days, counts, color="black")
+    pyplot.legend(loc=2)
+    pyplot.show()
 
 
 def _display(stats):
@@ -226,6 +264,16 @@ def wordtrack_display(filename=DEFAULT_FILE):
     current = tracks[-1] if tracks else []
     if current:
         return _display(_stats(current))
+
+
+def wordtrack_plot(filename=DEFAULT_FILE):
+    """
+    Display a plot of the data
+    """
+    tracks = _read_wordtrack_file(filename)
+    current = tracks[-1] if tracks else []
+    if current:
+        return _plot(current)
 
 
 def wordtrack_update(filename=DEFAULT_FILE, wordcount=0):
@@ -287,7 +335,7 @@ if __name__ == "__main__":
         out = wordtrack_display(filename)
         print out if out else __doc__
     else:
-        if argv[1] == "start":
+        if argv[1].lower() in ("start", "s"):
             # start a new period
             days = DEFAULT_TIME_PERIOD
             wordgoal = DEFAULT_WORDGOAL
@@ -297,6 +345,8 @@ if __name__ == "__main__":
                 wordgoal = int(argv[3])
             wordtrack_start(filename=filename, days=days, wordgoal=wordgoal)
             print "Started new wordtrack period (%s days including today) with the goal of writing %s words. Good luck!" % (days, wordgoal)
+        elif argv[1].lower() in ("plot", "p"):
+            print wordtrack_plot(filename=filename)
         elif argv[1] in ("help", "h", "--help"):
             print __doc__
         elif argv[1].isdigit():
