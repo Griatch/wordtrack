@@ -187,7 +187,7 @@ def _stats(tracking_data):
         finish_date = datetime.date.today() + datetime.timedelta(current_goal_day - current_day)
     else:
         finish_date = "Not started yet!"
-    needed_word_count = float(words_remaining) / days_remaining if days_remaining else 0
+    needed_words_per_day = float(words_remaining) / days_remaining if days_remaining else 0
 
     # validation
     if days_remaining < 0:
@@ -207,9 +207,10 @@ def _stats(tracking_data):
             "words_remaining": words_remaining,
             "current_day": current_day,
             "days_remaining": days_remaining,
-            "finish_day": current_goal_day,  # needed for correct plot
+            "finish_day": current_goal_day,
             "finish_date": finish_date,
-            "needed_word_count": int(math.ceil(needed_word_count))}
+            "target_time_period": target_time_period,
+            "needed_words_per_day": int(math.ceil(needed_words_per_day))}
 
 
 def _plot(tracking_data):
@@ -241,7 +242,7 @@ def _plot(tracking_data):
     fig, ax = pyplot.subplots()
     ax.set_xlim(0.5, Ncount + 2)
     ax.set_ylim(0, stats["target_word_count"] + 1)
-    ax.set_title("Wordtrack %s - %s" % (stats["starting_date"], stats["ending_date"]))
+    ax.set_title("Words written %s - %s" % (stats["starting_date"], stats["ending_date"]))
     ax.set_xlabel("Day number")
     ax.set_ylabel("Words written")
 
@@ -252,34 +253,50 @@ def _plot(tracking_data):
     ax.fill(*rshade, alpha=0.2, color="r")
     ax.plot(*deadline, c="r")
     ax.bar(days, counts, color="black", align="center")
-    ax.text(0.03, 0.97, _display(stats), transform=ax.transAxes, fontsize=10,
+    ax.text(0.03, 0.97, _display(stats, plot=True), transform=ax.transAxes, fontsize=12,
             horizontalalignment='left', verticalalignment='top',
-            bbox={"boxstyle":"round", "alpha":0.2, "facecolor":"white"})
+            bbox={"boxstyle":"round,pad=0.5", "alpha":0.2, "facecolor":"white"})
     pyplot.tight_layout()
     pyplot.show()
 
 
-def _display(stats):
+def _display(stats, plot=False):
     """
     Take stats dictionary and display on same format as nanowrimo.
-    """
-    output = """
-    Period: {starting_date} - {ending_date}
 
-    Your average per day:  {average_words_per_day}
-    Words written today:   {words_written_today}
-    Target word count:     {target_word_count}
-    Target average word
-           count per day:  {target_average_word_count}
-    Total words written:   {total_words_written}
-    Words remaining:       {words_remaining}
-    Current day:           {current_day}
-    Days remaining:        {days_remaining}
-    At this rate you
-          will finish on:  {finish_date}
-    Words per day to
-          finish on time:  {needed_word_count}
+    plot - make a compact plotting format
     """
+    if plot:
+        # this is a more compact format for the plot
+        output = \
+"""
+    Day {current_day} / {target_time_period}
+    Words: {total_words_written} / {target_word_count}
+    Today: {words_written_today} words
+    Rate for deadline: {needed_words_per_day} wpd
+    Current Rate: {average_words_per_day} wpd
+    Current finish: {finish_date}
+"""
+    else:
+        # same layout as nanowrimo
+        output = \
+"""
+ Period: {starting_date} - {ending_date}
+
+ Your average per day:  {average_words_per_day}
+ Words written today:   {words_written_today}
+ Target word count:     {target_word_count}
+ Target average word
+        count per day:  {target_average_word_count}
+ Total words written:   {total_words_written}
+ Words remaining:       {words_remaining}
+ Current day:           {current_day}
+ Days remaining:        {days_remaining}
+ At this rate you
+       will finish on:  {finish_date}
+ Words per day to
+       finish on time:  {needed_words_per_day}
+"""
     return output.format(**stats)
 
 
