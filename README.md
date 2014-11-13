@@ -12,22 +12,23 @@ their display was nice and encouraging and would like to have it for
 other times of the year too:
 
 ![plot](plot_example.png)
-```
-    Period: 2014-11-01 - 2014-11-30
 
-    Your average per day:  2203
-    Words written today:   1800
-    Target word count:     50000
-    Target average word
-           count per day:  1667
-    Total words written:   22037
-    Words remaining:       27963
-    Current day:           10
-    Days remaining:        21
-    At this rate you
-          will finish on:  2014-11-23
-    Words per day to
-          finish on time:  1332
+```
+ Period: 2014-11-01 - 2014-11-30
+
+ Your average per day:  1951
+ Words written today:   1164
+ Target word count:     50000
+ Target average word
+        count per day:  1667
+ Total words written:   25372
+ Words remaining:       24628
+ Current day:           13
+ Days remaining:        18
+ At this rate you
+       will finish on:  2014-11-26
+ Words per day to
+       finish on time:  1369
 ```
 
 ## Install
