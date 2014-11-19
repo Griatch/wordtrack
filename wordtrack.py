@@ -306,6 +306,7 @@ def wordtrack_display(filename=DEFAULT_FILE):
     """
     Show the word count in a nice list
     """
+    wordtrack_update(filename)
     tracks = _read_wordtrack_file(filename)
     current = tracks[-1] if tracks else []
     if current:
@@ -316,6 +317,7 @@ def wordtrack_plot(filename=DEFAULT_FILE):
     """
     Display a plot of the data
     """
+    wordtrack_update(filename)
     tracks = _read_wordtrack_file(filename)
     current = tracks[-1] if tracks else []
     if current:
@@ -341,13 +343,16 @@ def wordtrack_update(filename=DEFAULT_FILE, wordcount=0):
     iday = max(0, stats["current_day"])
     nlist = len(wordcount_list)
     diff = nlist - iday
+    auto_wordcount = max(wordcount, wordcount_list[-1] if wordcount_list else 0)
+    if wordcount_list and not wordcount:
+        wordcount = auto_wordcount
     if diff == -1:
         # new day - add new count
-        wordcount_list.append(wordcount)
+        wordcount_list.append(auto_wordcount)
     elif diff < -1:
         # days with nothing written
         for i in range(abs(diff)):
-            wordcount_list.append(0)
+            wordcount_list.append(auto_wordcount)
         wordcount_list.append(wordcount)
     else:
         # replace last count
