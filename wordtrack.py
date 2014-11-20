@@ -170,18 +170,19 @@ def _stats(tracking_data):
 
     target_time_period = (ending_date - starting_date).days + 1
     current_day = (datetime.date.today() - starting_date).days + 1
-    #current_day = (datetime.date(2014, 11, 25) - starting_date).days + 1
-
     days_remaining = target_time_period - current_day + 1
+
     total_words_written = wordcount_list[-1] if wordcount_list else 0
     target_average_word_count = float(wordgoal) / target_time_period if target_time_period else 0
     average_words_per_day = float(total_words_written) / current_day if current_day else 0
+
     words_written_today = 0
     if current_day == 1:
         words_written_today = wordcount_list[0]
     else:
         words_written_today = wordcount_list[-1] - wordcount_list[-2]
     words_remaining = wordgoal - total_words_written
+
     current_goal_day = current_day + int(math.ceil(words_remaining / average_words_per_day if average_words_per_day else 0))
     if current_goal_day != current_day:
         finish_date = datetime.date.today() + datetime.timedelta(current_goal_day - current_day)
