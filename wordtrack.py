@@ -186,7 +186,7 @@ def _stats(tracking_data):
     if current_goal_day != current_day:
         finish_date = datetime.date.today() + datetime.timedelta(current_goal_day - current_day)
     else:
-        finish_date = "Not started yet!"
+        finish_date = "Not started yet."
     needed_words_per_day = float(words_remaining) / days_remaining if days_remaining else 0
 
     # validation
@@ -196,6 +196,9 @@ def _stats(tracking_data):
         words_remaining = "Goal reached!"
     if current_day > target_time_period:
         current_day = "Time passed!"
+    if needed_words_per_day < 0:
+        finish_date = "Goal reached!"
+        needed_words_per_day = 0
 
     return {"starting_date": starting_date,
             "ending_date": ending_date,
@@ -223,25 +226,36 @@ def _plot(tracking_data):
         return "Plotting requires matplotlib, please install matplotlib and try again."
     wordcount_list = tracking_data[3:]
     stats = _stats(tracking_data)
-    counts = wordcount_list + [0 for i in range(stats["days_remaining"])]
+    counts = wordcount_list + [0 for i in range(stats["days_remaining"] -1 )]
     Ncount = len(counts)
     days = [1 + i for i in range(Ncount)]
-    target_average = [i * stats["target_average_word_count"] for i in range(Ncount)]
+    target_average = [i * stats["target_average_word_count"] for i in range(1, Ncount + 1)]
     current_average = [i * stats["average_words_per_day"] for i in range(1, Ncount + 1)]
-    x1, x2, y1, y2 = stats["finish_day"], Ncount, 0, stats["target_word_count"]
-    gshade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
-    goal_line = ((x1,x1), (y1,y2))
-    x1, x2, y1, y2 = Ncount, Ncount +2, 0, stats["target_word_count"]
-    rshade = ((x1,x1,x2,x2), (y1,y2,y2,y1))
+
+    xmin = 0
+    xmax = Ncount + 2
+    ymin = 0
+    ymax = max(stats["total_words_written"], stats["target_word_count"] + 1)
+
+    # red shajded region (past deadline)
+    x1, x2, y1, y2 = Ncount, xmax, ymin, ymax
+    rshade = ((x1, x1, x2, x2), (y1, y2, y2, y1))
     deadline = ((x1,x1), (y1,y2))
+    # green shaded region (faster than finish)
+    x1, x2, y1, y2 = min(x1, stats["finish_day"]), Ncount, ymin, ymax
+    gshade = ((x1, x1, x2, x2), (y1, y2, y2, y1))
+    goal_line = ((x1, x1), (y1, y2))
+    # horizontal word count target line
+    x1, x2, y1 = xmin, xmax, stats["target_word_count"]
+    word_target_line = ((x1, x2), (y1, y1))
 
     # creating the plots
     print "plotting ..."
     pyplot.close("all")
 
     fig, ax = pyplot.subplots()
-    ax.set_xlim(0.5, Ncount + 2)
-    ax.set_ylim(0, stats["target_word_count"] + 1)
+    ax.set_xlim(xmin + 0.5, xmax)
+    ax.set_ylim(ymin, ymax)
     ax.set_title("Words written %s - %s" % (stats["starting_date"], stats["ending_date"]))
     ax.set_xlabel("Day number")
     ax.set_ylabel("Words written")
@@ -252,6 +266,7 @@ def _plot(tracking_data):
     ax.plot(*goal_line, c="g")
     ax.fill(*rshade, alpha=0.2, color="r")
     ax.plot(*deadline, c="r")
+    ax.plot(*word_target_line, c='g', linestyle='--')
     ax.bar(days, counts, color="black", align="center")
     ax.text(0.03, 0.97, _display(stats, plot=True), transform=ax.transAxes, fontsize=12,
             horizontalalignment='left', verticalalignment='top',
