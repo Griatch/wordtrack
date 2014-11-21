@@ -59,7 +59,7 @@ import datetime
 
 # default config values
 
-DEFAULT_FILE = "./wordtrack.dat"
+DEFAULT_FILE = "./wordtrack.txt"
 DEFAULT_TIME_PERIOD = 30
 DEFAULT_WORDGOAL = 50000
 

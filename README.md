@@ -33,17 +33,25 @@ other times of the year too:
 
 ## Install
 
-You need git and Python 2.7. For plotting you also need matplotlib.
+You need [GIT](http://git-scm.com/) and [Python 2.7](https://www.python.org/downloads/release/python-278/)
+(not tested with Python 3+).  For plotting you need
+[matplotlib](http://matplotlib.org/) (but you can still print all the
+statistics without it).
 
-Just `cd` to the place you want the program folder to end up and do
+With Python and GIT installed, open your terminal window or command
+line. Use the `cd` command to place yourself where you want the program folder
+to end up and do
 
 ```
 git clone https://github.com/Griatch/wordtrack.git
 ```
 
+This will create a new folder `wordtrack` at that location.
+
 ## Usage
 
-Wordtrack is run from the installation folder, in a terminal.
+Wordtrack is run from the installation folder, in a terminal/command
+line window.
 
 ```
     python wordtrack [start [days [wordgoal]] | plot | <wordcount>]
