@@ -236,7 +236,7 @@ def _plot(tracking_data):
     xmin = 0
     xmax = Ncount + 2
     ymin = 0
-    ymax = max(stats["total_words_written"], stats["target_word_count"] + 1)
+    ymax = max(stats["total_words_written"] + 1000, stats["target_word_count"] + 1)
 
     # red shajded region (past deadline)
     x1, x2, y1, y2 = Ncount, xmax, ymin, ymax
