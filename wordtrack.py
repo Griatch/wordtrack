@@ -227,6 +227,8 @@ def _plot(tracking_data):
         return "Plotting requires matplotlib, please install matplotlib and try again."
     wordcount_list = tracking_data[3:]
     stats = _stats(tracking_data)
+    if isinstance("days_remaining", basestring):
+        return
     counts = wordcount_list + [0 for i in range(stats["days_remaining"] -1 )]
     Ncount = len(counts)
     days = [1 + i for i in range(Ncount)]
